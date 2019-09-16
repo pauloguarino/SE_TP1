@@ -35,6 +35,13 @@
  * Date: 2016-04-26
  */
 
+/*==================[conditions]=============================================*/
+
+#define COMPILE_BLINKY (1)
+#define COMPILE_LEDS (2)
+#define COMPILE_TICKHOOK (3)
+#define COMPILE_MODE (COMPILE_BLINKY)
+
 /*==================[inclusions]=============================================*/
 
 //#include "blinky.h"   // <= own header (optional)
@@ -56,6 +63,12 @@
 
 /* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
 int main(void){
+
+/* ----------------- ****** ----------------- */
+/* ----------------- BLINKY ----------------- */
+/* ----------------- ****** ----------------- */
+
+#if COMPILE_MODE == COMPILE_BLINKY
 
    /* ------------- INICIALIZACIONES ------------- */
 
@@ -79,7 +92,101 @@ int main(void){
 
    /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
       por ningun S.O. */
-   return 0 ;
+
+   return 0;
+
+#elif COMPILE_MODE == COMPILE_LEDS
+
+/* ----------------- **** ----------------- */
+/* ----------------- LEDS ----------------- */
+/* ----------------- **** ----------------- */
+
+   /* ------------- INICIALIZACIONES ------------- */
+
+   /* Inicializar la placa */
+   boardConfig();
+
+   gpioConfig( GPIO0, GPIO_INPUT );
+
+   gpioConfig( GPIO1, GPIO_OUTPUT );
+
+   /* Variable para almacenar el valor de tecla leido */
+   bool_t valor;
+
+   /* ------------- REPETIR POR SIEMPRE ------------- */
+   while(1) {
+
+      valor = !gpioRead( TEC1 );
+      gpioWrite( LEDB, valor );
+
+      valor = !gpioRead( TEC2 );
+      gpioWrite( LED1, valor );
+
+      valor = !gpioRead( TEC3 );
+      gpioWrite( LED2, valor );
+
+      valor = !gpioRead( TEC4 );
+      gpioWrite( LED3, valor );
+
+      valor = !gpioRead( GPIO0 );
+      gpioWrite( GPIO1, valor );
+
+   }
+
+   /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
+      por ningun S.O. */
+   return 0;
+
+#elif COMPILE_MODE == COMPILE_TICKHOOK
+
+/* ----------------- ******** ----------------- */
+/* ----------------- TICKHOOK ----------------- */
+/* ----------------- ******** ----------------- */
+
+   /* ------------- INICIALIZACIONES ------------- */
+
+   /* Inicializar la placa */
+   boardConfig();
+
+   /* Inicializar el conteo de Ticks con resolucion de 50ms (se ejecuta
+      periodicamente una interrupcion cada 50ms que incrementa un contador de
+      Ticks obteniendose una base de tiempos). */
+   tickConfig( 50 );
+
+   /* Se agrega ademas un "tick hook" nombrado myTickHook. El tick hook es
+      simplemente una funcion que se ejecutara peri�odicamente con cada
+      interrupcion de Tick, este nombre se refiere a una funcion "enganchada"
+      a una interrupcion.
+      El segundo parametro es el parametro que recibe la funcion myTickHook
+      al ejecutarse. En este ejemplo se utiliza para pasarle el led a titilar.
+   */
+   tickCallbackSet( myTickHook, (void*)LEDR );
+   delay(1000);
+
+   /* ------------- REPETIR POR SIEMPRE ------------- */
+   while(1) {
+      tickCallbackSet( myTickHook, (void*)LEDG );
+      delay(1000);
+      tickCallbackSet( myTickHook, (void*)LEDB );
+      delay(1000);
+      tickCallbackSet( myTickHook, (void*)LED1 );
+      delay(1000);
+      tickCallbackSet( myTickHook, (void*)LED2 );
+      delay(1000);
+      tickCallbackSet( myTickHook, (void*)LED3 );
+      delay(1000);
+      tickCallbackSet( myTickHook, (void*)LEDR );
+      delay(1000);
+   }
+
+   /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
+      por ningun S.O. */
+   return 0;
+
+#else
+#error "NO COMPILE MODE SET"
+#endif
+
 }
 
 /*==================[end of file]============================================*/

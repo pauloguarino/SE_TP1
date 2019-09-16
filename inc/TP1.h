@@ -33,8 +33,8 @@
 
 /* Date: 2015-09-23 */
 
-#ifndef _BLINKY_H_
-#define _BLINKY_H_
+#ifndef _TP1_H_
+#define _TP1_H_
 
 /*==================[inclusions]=============================================*/
 
@@ -59,4 +59,4 @@ extern "C" {
 #endif
 
 /*==================[end of file]============================================*/
-#endif /* #ifndef _BLINKY_H_ */
+#endif /* #ifndef _TP1_H_ */
