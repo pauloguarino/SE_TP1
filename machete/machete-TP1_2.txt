@@ -1,0 +1,13 @@
+TP1_2
+
+TP1.c =>
+
+
+#define TEST (TP1_2)
+
+
+#if (TEST == TP1_2)	/* Test & Migrate PROJECT = sapi_examples/edu-ciaa-nxp/bare_metal/gpio/gpio_01_switches_leds
+							       to PROJECT = projects/SE-2018-TPs/TP1 */
+???
+
+#endif

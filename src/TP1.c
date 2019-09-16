@@ -37,10 +37,13 @@
 
 /*==================[conditions]=============================================*/
 
-#define COMPILE_BLINKY (1)
-#define COMPILE_LEDS (2)
-#define COMPILE_TICKHOOK (3)
-#define COMPILE_MODE (COMPILE_BLINKY)
+#define TP1_1 (1)
+#define TP1_2 (2)
+#define TP1_3 (3)
+#define TP1_4 (4)
+#define TP1_5 (5)
+#define TP1_6 (6)
+#define TEST (TP1_1)
 
 /*==================[inclusions]=============================================*/
 
@@ -68,7 +71,7 @@ int main(void){
 /* ----------------- BLINKY ----------------- */
 /* ----------------- ****** ----------------- */
 
-#if COMPILE_MODE == COMPILE_BLINKY
+#if TEST == TP1_1
 
    /* ------------- INICIALIZACIONES ------------- */
 
@@ -95,7 +98,7 @@ int main(void){
 
    return 0;
 
-#elif COMPILE_MODE == COMPILE_LEDS
+#elif TEST == TP1_2
 
 /* ----------------- **** ----------------- */
 /* ----------------- LEDS ----------------- */
@@ -137,7 +140,7 @@ int main(void){
       por ningun S.O. */
    return 0;
 
-#elif COMPILE_MODE == COMPILE_TICKHOOK
+#elif TEST == TP1_3
 
 /* ----------------- ******** ----------------- */
 /* ----------------- TICKHOOK ----------------- */
@@ -183,8 +186,20 @@ int main(void){
       por ningun S.O. */
    return 0;
 
+#elif TEST == TP1_4
+
+
+
+#elif TEST == TP1_5
+
+
+
+#elif TEST == TP1_6
+
+
+
 #else
-#error "NO COMPILE MODE SET"
+#error "NO TEST SET"
 #endif
 
 }
