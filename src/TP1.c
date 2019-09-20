@@ -37,13 +37,7 @@
 
 /*==================[conditions]=============================================*/
 
-#define TP1_1 (1)
-#define TP1_2 (2)
-#define TP1_3 (3)
-#define TP1_4 (4)
-#define TP1_5 (5)
-#define TP1_6 (6)
-#define TEST (TP1_1)
+
 
 /*==================[inclusions]=============================================*/
 
@@ -64,6 +58,15 @@
 
 /*==================[external functions definition]==========================*/
 
+#define TP1_1 1
+#define TP1_2 (2)
+#define TP1_3 (3)
+#define TP1_4 (4)
+#define TP1_5 (5)
+#define TP1_6 (6)
+#define TEST TP1_1
+
+
 /* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
 int main(void){
 
@@ -71,7 +74,7 @@ int main(void){
 /* ----------------- BLINKY ----------------- */
 /* ----------------- ****** ----------------- */
 
-#if TEST == TP1_1
+#if (TEST == TP1_1)
 
    /* ------------- INICIALIZACIONES ------------- */
 
@@ -82,14 +85,14 @@ int main(void){
    while(1) {
 
       /* Prendo el led azul */
-      gpioWrite( LEDB, ON );
+      gpioWrite( LEDG, ON );
 
-      delay(500);
+      delay(1500);
 
       /* Apago el led azul */
-      gpioWrite( LEDB, OFF );
+      gpioWrite( LEDG, OFF );
 
-      delay(500);
+      delay(1500);
 
    }
 
@@ -98,7 +101,7 @@ int main(void){
 
    return 0;
 
-#elif TEST == TP1_2
+#elif (TEST == TP1_2)
 
 /* ----------------- **** ----------------- */
 /* ----------------- LEDS ----------------- */
