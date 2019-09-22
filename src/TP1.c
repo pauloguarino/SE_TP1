@@ -212,12 +212,12 @@ int main(void){
 #define TICKRATE_1MS	(1)				/* 1000 ticks por segundo */
 #define TICKRATE_10MS	(10)			/* 100 ticks por segundo */
 #define TICKRATE_100MS	(100)			/* 10 ticks por segundo */
-#define TICKRATE_MS		(TICKRATE_1MS)	/* defino el TICKRATE a 1MS */
+#define TICKRATE_MS		(TICKRATE_50MS)	/* defino el TICKRATE a 1MS */
 
 #define LED_TOGGLE_100MS	(100)		/* */
 #define LED_TOGGLE_500MS	(500)		/**/
 #define LED_TOGGLE_1000MS	(1000)		/**/
-#define LED_TOGGLE_MS		(LED_TOGGLE_1000MS / TICKRATE_MS)   
+#define LED_TOGGLE_MS		(LED_TOGGLE_500MS / TICKRATE_MS)   
    
 /* ----------------- ******** ----------------- */
 /* ----------------- TICKHOOK ----------------- */
