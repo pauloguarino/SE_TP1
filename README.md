@@ -51,11 +51,27 @@ Primero se inicializa la placa y se configura el tick rate para que se produzca 
 
 **TP1_4**
 
-Se definen las constantes TICKRATE_1MS, TICKRATE_10MS y TICKRATE_100MS con valores de 1, 10 y 100, representando el número de ticks por segundo. 
-También se definen las constantes LED_TOGGLE_100MS, LED_TOGGLE_500MS y LED_TOGGLE_1000MS con valores de 100, 500 y 1000, representando el tiempo de cambio del LED. 
-Para poder hacer portable la versión, se definen las constantes “TICKRATE_MS” y “LED_TOGGLE_MS” y se las iguala a alguna de las constantes previamente definidas.
+Se definen las constantes TICKRATE_1MS, TICKRATE_10MS y TICKRATE_100MS con valores de 1, 10 y 100, representando el número de ticks por segundo. Ejemplo:
+```
+#define TICKRATE_1MS	(1)
+```
+También se definen las constantes LED_TOGGLE_100MS, LED_TOGGLE_500MS y LED_TOGGLE_1000MS con valores de 100, 500 y 1000, representando el tiempo de cambio del LED. Ejemplo:
+```
+#define LED_TOGGLE_100MS	(100)
+```
 
+Para poder hacer portable la versión, se definen las constantes “TICKRATE_MS” y “LED_TOGGLE_MS” y se las iguala a alguna de las constantes previamente definidas. Esto se hace de la siguiente forma:
+```
+#define TICKRATE_MS		(TICKRATE_50MS)	
+#define LED_TOGGLE_MS		(LED_TOGGLE_500MS / TICKRATE_MS)  
+```
 Luego se copió el código del punto anterior y se modifican las llamadas a las funciones “tickConfig(50)” y “delay(1000);”, por las definiciones mencionadas arriba. A continuación, se muestra el ejemplo del código. 
+```
+tickConfig( TICKRATE_MS );	
+ delay(LED_TOGGLE_MS);
+```
+Con estos cambios el codigo de TP1_3 mas portable. Y de ser necesario cambiar los tiempos de parpadeo de los leds, se debe cambiar una sola vez sobre los defines mostrados arriba. Tambien permite agregar nuevos tiempos modificando solo dos lineas de codigo. 
+
 
 **TP1_5**
 
