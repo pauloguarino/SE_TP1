@@ -50,21 +50,39 @@
 
 /*==================[internal functions declaration]=========================*/
 
+void myTickHook( void *);
+
 /*==================[internal data definition]===============================*/
 
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
 
+/* FUNCION que se ejecuta cada vez que ocurre un Tick. */
+void myTickHook( void *ptr ){
+
+   static bool_t ledState = OFF;
+
+   gpioMap_t led = (gpioMap_t)ptr;
+
+   if( ledState ){
+      ledState = OFF;
+   }
+   else{
+      ledState = ON;
+   }
+   gpioWrite( led, ledState );
+}
+
 /*==================[external functions definition]==========================*/
 
-#define TP1_1 1
+#define TP1_1 (1)
 #define TP1_2 (2)
 #define TP1_3 (3)
 #define TP1_4 (4)
 #define TP1_5 (5)
 #define TP1_6 (6)
-#define TEST TP1_1
+#define TEST (TP1_3)
 
 
 /* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
@@ -85,14 +103,14 @@ int main(void){
    while(1) {
 
       /* Prendo el led azul */
-      gpioWrite( LEDG, ON );
+      gpioToggle( LEDG);
 
-      delay(1500);
+      delay(1000);
 
       /* Apago el led azul */
-      gpioWrite( LEDG, OFF );
+      gpioToggle( LEDG);
 
-      delay(1500);
+      delay(1000);
 
    }
 
