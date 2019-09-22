@@ -74,6 +74,17 @@ Con estos cambios el codigo de TP1_3 mas portable. Y de ser necesario cambiar lo
 
 
 **TP1_5**
+Se instalaron los drivers de la placa (). Luego, se utilizó la IDE de Arduino, previamente configurada (COMx y baudrate 115200) la cual tiene una interfaz serie. Con esta se observaron los mensajes enviados por la placa. 
+Para enviar un mensaje por el puerto serie primero se debió habilitar y configurar la comunicación. Esto se realizó con:
+```
+DEBUG_PRINT_ENABLE;
+debugPrintConfigUart( UART_USB, 115200);
+```
+
+La segunda función está definida sobre sapi_print.c y es la que establece el medio de la comunicación (UART_USB) y la velocidad o baudrate (115200). Cabe aclarar que esta función llama a su vez a “void uartConfig( uartMap_t uart, uint32_t baudRate )”  definida en  “sapi_uart.c”. Esta función es la que realmente inicializa, setea el baudrate, habilita la transmisión y recepción y establece el largo de las tramas.
+
+Por otro lado, ‘debugPrintString’  es la encargada de escribir el string por la UART y está definida sobre sapi_print.c. Para esto se usa la función “uartWriteString( printer, string )” que escribe caracter por caracter sobre la UART.
+La función “uartWriteByte” lee el flag de TxReady y si lo encuentra vacío, carga el byte a enviar sobre la dirección de la UART (pUART->THR), en caso contrario espera.
 
 
 
