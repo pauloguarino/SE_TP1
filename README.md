@@ -11,6 +11,9 @@ PROJECT = projects/TP1
 
 En TP1.c se crean macros para la compilación condicional de los 6 puntos del TP1, llamadas TP1_X, donde X es el número del paso, y cada una de valor (X). Se divide el archivo en secciones para la compilación condicional con #if o #elif seguido por (TEST == TP1_X). El código copiado de blinky.c se lo deja en la primer sección, correspondiente a TP1_1.
 
+Para configurar el debugger, primero se ejecuta la opción Clean project, luego Build project, y en la configuración del debugger se elije la opción de "GDB OpenOCD Debugging".
+Para analizar el código y documentar lo que se ejecuta en cada sección, primero se elije la opción Run y se comprueba que la placa haga lo que se espera de haber leído el main, luego Terminate, y después se ejecuta la opción de Debug. Al debuggear se usan los botones de step over para avanzar en las líneas, step into para entrar a las funciones y ver qué hacen esas funciones, dónde se encuentran y que variables modifican, y step return para salir de la función.
+
 ## Debugging
 
 **TP1_1**
