@@ -209,7 +209,59 @@ int main(void){
 
 #elif TEST == TP1_4
 
+#define TICKRATE_1MS	(1)				/* 1000 ticks por segundo */
+#define TICKRATE_10MS	(10)			/* 100 ticks por segundo */
+#define TICKRATE_100MS	(100)			/* 10 ticks por segundo */
+#define TICKRATE_MS		(TICKRATE_1MS)	/* defino el TICKRATE a 1MS */
 
+#define LED_TOGGLE_100MS	(100)		/* */
+#define LED_TOGGLE_500MS	(500)		/**/
+#define LED_TOGGLE_1000MS	(1000)		/**/
+#define LED_TOGGLE_MS		(LED_TOGGLE_1000MS / TICKRATE_MS)   
+   
+/* ----------------- ******** ----------------- */
+/* ----------------- TICKHOOK ----------------- */
+/* ----------------- ******** ----------------- */
+
+   /* ------------- INICIALIZACIONES ------------- */
+
+   /* Inicializar la placa */
+   boardConfig();
+
+   /* Inicializar el conteo de Ticks con resolucion de 50ms (se ejecuta
+      periodicamente una interrupcion cada 50ms que incrementa un contador de
+      Ticks obteniendose una base de tiempos). */
+   tickConfig( TICKRATE_MS );
+
+   /* Se agrega ademas un "tick hook" nombrado myTickHook. El tick hook es
+      simplemente una funcion que se ejecutara peri�odicamente con cada
+      interrupcion de Tick, este nombre se refiere a una funcion "enganchada"
+      a una interrupcion.
+      El segundo parametro es el parametro que recibe la funcion myTickHook
+      al ejecutarse. En este ejemplo se utiliza para pasarle el led a titilar.
+   */
+   tickCallbackSet( myTickHook, (void*)LEDR );
+   delay(LED_TOGGLE_MS);
+
+   /* ------------- REPETIR POR SIEMPRE ------------- */
+   while(1) {
+      tickCallbackSet( myTickHook, (void*)LEDG );
+      delay(LED_TOGGLE_MS);
+      tickCallbackSet( myTickHook, (void*)LEDB );
+      delay(LED_TOGGLE_MS);
+      tickCallbackSet( myTickHook, (void*)LED1 );
+      delay(LED_TOGGLE_MS);
+      tickCallbackSet( myTickHook, (void*)LED2 );
+      delay(LED_TOGGLE_MS);
+      tickCallbackSet( myTickHook, (void*)LED3 );
+      delay(LED_TOGGLE_MS);
+      tickCallbackSet( myTickHook, (void*)LEDR );
+      delay(LED_TOGGLE_MS);
+   }
+
+   /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
+      por ningun S.O. */
+   return 0;
 
 #elif TEST == TP1_5
 
