@@ -49,6 +49,7 @@ Se modifica el valor de la macro TEST por (TP1_3) para debuggear la tercera secc
 
 Primero se inicializa la placa y se configura el tick rate para que se produzca un tick por cada 50 ms con la función tickConfig, definida en sapi_tick.c, que permite ajustar el tick rate, asociado a la variable tickRateMS de tipo tick_t, entre 1 y 50 ms. En ese mismo archivo está definida la función tickCallbackSet, que define la función a llamar cada vez que hay una interrupción por tick. Después de ajustar el tick rate se llama a esta función, pasandole como argumento la función myTickHook, que togglea el LED cuyo registro se le pasa como argumento. El código de esta sección consiste en un ciclo infinito en el que se van seteando distintos LEDs para que se prendan y apaguen con la interrupción del tick, y delays entre medio para dejar que los LEDs titilen durante un segundo por vez, con la frecuencia del tick rate.
 
+
 **TP1_4**
 
 Se definen las constantes TICKRATE_1MS, TICKRATE_10MS y TICKRATE_100MS con valores de 1, 10 y 100, representando el número de ticks por segundo. Ejemplo:
@@ -86,7 +87,7 @@ La segunda función está definida sobre sapi_print.c y es la que establece el m
 Por otro lado, ‘debugPrintString’  es la encargada de escribir el string por la UART y está definida sobre sapi_print.c. Para esto se usa la función “uartWriteString( printer, string )” que escribe caracter por caracter sobre la UART.
 La función “uartWriteByte” lee el flag de TxReady y si lo encuentra vacío, carga el byte a enviar sobre la dirección de la UART (pUART->THR), en caso contrario espera.
 
-
+![alt text] https://github.com/pauloguarino/SE_TP1/blob/master/leds.png
 
 **TP1_6**
 
