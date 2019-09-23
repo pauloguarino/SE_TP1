@@ -101,4 +101,20 @@ La función “uartWriteByte” lee el flag de TxReady y si lo encuentra vacío,
 ![](leds.png)
 
 **TP1_6**
+Para la lectura de un botón, se utiliza la función “gpioRead( tecla )”. Esta función busca el estado en el que se encuentra el pin y lo devuelve en una variable bool_t.
+En esta función se definen las variables  siguiente y se llama a la función “gpioObtainPinConfig( … )”. Esta última busca y devuelve las características o valores de configuración del pin ( valores de las variables definidas abajo  ).
 
+```
+// define las variables en “gpioRead”
+   bool_t ret_val     = OFF;
+
+   int8_t pinNamePort = 0;
+   int8_t pinNamePin  = 0;
+
+   int8_t func        = 0;
+
+   int8_t gpioPort    = 0;
+   int8_t gpioPin     = 0;
+```
+
+Por último, se llama a “Chip_GPIO_ReadPortBit” que lee el estado del GPIO y devuelve un bool.
