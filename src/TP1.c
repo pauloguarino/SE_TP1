@@ -265,7 +265,79 @@ int main(void){
 
 #elif TEST == TP1_5
 
+#define TICKRATE_1MS	(1)				/* 1000 ticks por segundo */
+#define TICKRATE_10MS	(10)			/* 100 ticks por segundo */
+#define TICKRATE_100MS	(100)			/* 10 ticks por segundo */
+#define TICKRATE_MS		(TICKRATE_50MS)	/* defino el TICKRATE a 1MS */
 
+#define LED_TOGGLE_100MS	(100)		/* */
+#define LED_TOGGLE_500MS	(500)		/**/
+#define LED_TOGGLE_1000MS	(1000)		/**/
+#define LED_TOGGLE_MS		(LED_TOGGLE_500MS / TICKRATE_MS)   
+   
+/* The DEBUG* functions are sAPI debug print functions.
+Code that uses the DEBUG* functions will have their I/O routed to
+the sAPI DEBUG UART. */  
+DEBUG_PRINT_ENABLE;
+/* ----------------- ******** ----------------- */
+/* ----------------- TICKHOOK ----------------- */
+/* ----------------- ******** ----------------- */
+  void myTickHook( void *);
+
+/* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
+
+/* ----------------- ****** ----------------- */
+/* ----------------- BLINKY ----------------- */
+/* ----------------- ****** ----------------- */
+   bool_t MytickConfig( tick_t );
+
+
+   	   /* ------------- INICIALIZACIONES ------------- */
+
+   	   /* Inicializar la placa */
+   	   boardConfig();
+
+   	   /* Inicializar el conteo de Ticks con resolucion de 1ms (se ejecuta
+   	      periodicamente una interrupcion cada 1ms que incrementa un contador de
+   	      Ticks obteniendose una base de tiempos). */
+   	   tickConfig(  TICKRATE_MS	 );
+
+   	   /* Se agrega ademas un "tick hook" nombrado myTickHook. El tick hook es
+   	      simplemente una funcion que se ejecutara peri�odicamente con cada
+   	      interrupcion de Tick, este nombre se refiere a una funcion "enganchada"
+   	      a una interrupcion.
+   	      El segundo parametro es el parametro que recibe la funcion myTickHook
+   	      al ejecutarse. En este ejemplo se utiliza para pasarle el led a titilar.
+   	   */
+   	   tickCallbackSet( myTickHook, (void*)LEDR );
+   	   delay(LED_TOGGLE_MS);
+
+   	   debugPrintConfigUart( UART_USB, 115200);
+   	   debugPrintString( "DEBUG c/sAPI\r\n" );
+
+   	   /* ------------- REPETIR POR SIEMPRE ------------- */
+   	   while(1) {
+   	      tickCallbackSet( myTickHook, (void*)LEDG );
+   	      delay(LED_TOGGLE_MS);
+   	      debugPrintString( "LED Toggle G\n" );
+   	      tickCallbackSet( myTickHook, (void*)LEDB );
+   	      delay(LED_TOGGLE_MS);
+   	      debugPrintString( "LED Toggle B\n" );
+   	      tickCallbackSet( myTickHook, (void*)LED1 );
+   	      delay(LED_TOGGLE_MS);
+   	      debugPrintString( "LED Toggle 1\n" );
+   	      tickCallbackSet( myTickHook, (void*)LED2 );
+   	      delay(LED_TOGGLE_MS);
+   	      debugPrintString( "LED Toggle 2\n" );
+   	      tickCallbackSet( myTickHook, (void*)LED3 );
+   	      delay(LED_TOGGLE_MS);
+   	      debugPrintString( "LED Toggle 3\n" );
+   	      tickCallbackSet( myTickHook, (void*)LEDR );
+   	      delay(LED_TOGGLE_MS);
+   	      debugPrintString( "LED Toggle R\n" );
+   	   }
+
+   	   return 0 ;
 
 #elif TEST == TP1_6
 
