@@ -84,6 +84,17 @@ debugPrintConfigUart( UART_USB, 115200);
 
 La segunda función está definida sobre sapi_print.c y es la que establece el medio de la comunicación (UART_USB) y la velocidad o baudrate (115200). Cabe aclarar que esta función llama a su vez a “void uartConfig( uartMap_t uart, uint32_t baudRate )”  definida en  “sapi_uart.c”. Esta función es la que realmente inicializa, setea el baudrate, habilita la transmisión y recepción y establece el largo de las tramas.
 
+```
+typedef enum{
+   UART_GPIO = 0, // Hardware UART0 via GPIO1(TX), GPIO2(RX) pins on header P0
+   UART_485  = 1, // Hardware UART0 via RS_485 A, B and GND Borns
+   //UART_1  = 2, // Hardware UART1 not routed
+   UART_USB  = 3, // Hardware UART2 via USB DEBUG port
+   UART_ENET = 4, // Hardware UART2 via ENET_RXD0(TX), ENET_CRS_DV(RX) pins on header P0
+   UART_232  = 5  // Hardware UART3 via 232_RX and 232_tx pins on header P1
+} uartMap_t;
+```
+
 Por otro lado, ‘debugPrintString’  es la encargada de escribir el string por la UART y está definida sobre sapi_print.c. Para esto se usa la función “uartWriteString( printer, string )” que escribe caracter por caracter sobre la UART.
 La función “uartWriteByte” lee el flag de TxReady y si lo encuentra vacío, carga el byte a enviar sobre la dirección de la UART (pUART->THR), en caso contrario espera.
 
