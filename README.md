@@ -87,7 +87,7 @@ La segunda función está definida sobre sapi_print.c y es la que establece el m
 Por otro lado, ‘debugPrintString’  es la encargada de escribir el string por la UART y está definida sobre sapi_print.c. Para esto se usa la función “uartWriteString( printer, string )” que escribe caracter por caracter sobre la UART.
 La función “uartWriteByte” lee el flag de TxReady y si lo encuentra vacío, carga el byte a enviar sobre la dirección de la UART (pUART->THR), en caso contrario espera.
 
-![alt text] (https://github.com/pauloguarino/SE_TP1/blob/master/leds.png)
+![alt text] (/leds.png)
 
 **TP1_6**
 
