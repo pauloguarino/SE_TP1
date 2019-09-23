@@ -75,6 +75,7 @@ Con estos cambios el codigo de TP1_3 mas portable. Y de ser necesario cambiar lo
 
 
 **TP1_5**
+
 Se instalaron los drivers de la placa (). Luego, se utilizó la IDE de Arduino, previamente configurada (COMx y baudrate 115200) la cual tiene una interfaz serie. Con esta se observaron los mensajes enviados por la placa. 
 Para enviar un mensaje por el puerto serie primero se debió habilitar y configurar la comunicación. Esto se realizó con:
 ```
@@ -101,6 +102,7 @@ La función “uartWriteByte” lee el flag de TxReady y si lo encuentra vacío,
 ![](leds.png)
 
 **TP1_6**
+
 Para la lectura de un botón, se utiliza la función “gpioRead( tecla )”. Esta función busca el estado en el que se encuentra el pin y lo devuelve en una variable bool_t.
 En esta función se definen las variables  siguiente y se llama a la función “gpioObtainPinConfig( … )”. Esta última busca y devuelve las características o valores de configuración del pin ( valores de las variables definidas abajo  ).
 
