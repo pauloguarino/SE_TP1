@@ -49,10 +49,12 @@ Se modifica el valor de la macro TEST por (TP1_3) para debuggear la tercera secc
 
 Primero se inicializa la placa y se configura el tick rate para que se produzca un tick por cada 50 ms con la función tickConfig, definida en sapi_tick.c, que permite ajustar el tick rate, asociado a la variable tickRateMS de tipo tick_t, entre 1 y 50 ms. En ese mismo archivo está definida la función tickCallbackSet, que define la función a llamar cada vez que hay una interrupción por tick. Después de ajustar el tick rate se llama a esta función, pasandole como argumento la función myTickHook, que togglea el LED cuyo registro se le pasa como argumento. El código de esta sección consiste en un ciclo infinito en el que se van seteando distintos LEDs para que se prendan y apaguen con la interrupción del tick, y delays entre medio para dejar que los LEDs titilen durante un segundo por vez, con la frecuencia del tick rate.
 
+Agregando un breakpoint dentro de myTickHook y seleccionando la opción Step Return una vez que el debugger llegó a ese breakpoint, se encontró que la función que maneja la interrupción por tick es SysTick_Handler, de sapi_tick.c. Lo que hace es simplemente aumentar el counter del tick y llamar a la función que había sido seteada con tickCallbackSet si es que fue seteada.
+
 
 **TP1_4**
 
-Se definen las constantes TICKRATE_1MS, TICKRATE_10MS y TICKRATE_100MS con valores de 1, 10 y 100, representando el número de ticks por segundo. Ejemplo:
+Se definen las constantes TICKRATE_1MS, TICKRATE_10MS y TICKRATE_50MS con valores de 1, 10 y 50, representando el número de milisegundos por tick. Ejemplo:
 ```
 #define TICKRATE_1MS	(1)
 ```
@@ -60,19 +62,20 @@ También se definen las constantes LED_TOGGLE_100MS, LED_TOGGLE_500MS y LED_TOGG
 ```
 #define LED_TOGGLE_100MS	(100)
 ```
-
-Para poder hacer portable la versión, se definen las constantes “TICKRATE_MS” y “LED_TOGGLE_MS” y se las iguala a alguna de las constantes previamente definidas. Esto se hace de la siguiente forma:
+Se definen las constantes “TICKRATE_MS” y “LED_TOGGLE_MS” y se las iguala a alguna de las constantes previamente definidas. Esto se hace de la siguiente forma:
 ```
 #define TICKRATE_MS		(TICKRATE_50MS)	
-#define LED_TOGGLE_MS		(LED_TOGGLE_500MS / TICKRATE_MS)  
+#define LED_TOGGLE_MS	(LED_TOGGLE_500MS / TICKRATE_MS)  
 ```
+De ser necesario cambiar los tiempos de parpadeo de los leds, se debe cambiar una sola vez sobre los defines mostrados arriba. Tambien permite agregar nuevos tiempos modificando solo dos lineas de codigo. 
+
+Para poder hacer más portable la versión, se buscó prescindir de la función delay(). La función myTickHook ahora
+
 Luego se copió el código del punto anterior y se modifican las llamadas a las funciones “tickConfig(50)” y “delay(1000);”, por las definiciones mencionadas arriba. A continuación, se muestra el ejemplo del código. 
 ```
-tickConfig( TICKRATE_MS );	
- delay(LED_TOGGLE_MS);
+tickConfig( TICKRATE_MS );
 ```
-Con estos cambios el codigo de TP1_3 mas portable. Y de ser necesario cambiar los tiempos de parpadeo de los leds, se debe cambiar una sola vez sobre los defines mostrados arriba. Tambien permite agregar nuevos tiempos modificando solo dos lineas de codigo. 
-
+Con estos cambios el código de TP1_3 más portable. Y 
 
 **TP1_5**
 

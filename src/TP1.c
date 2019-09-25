@@ -46,6 +46,14 @@
 
 /*==================[macros and definitions]=================================*/
 
+#define TP1_1 (1)
+#define TP1_2 (2)
+#define TP1_3 (3)
+#define TP1_4 (4)
+#define TP1_5 (5)
+#define TP1_6 (6)
+#define TEST (TP1_4)
+
 /*==================[internal data declaration]==============================*/
 
 /*==================[internal functions declaration]=========================*/
@@ -54,10 +62,13 @@ void myTickHook( void *);
 
 /*==================[internal data definition]===============================*/
 
+volatile bool LED_Time_Flag = false;
+
 /*==================[external data definition]===============================*/
 
 /*==================[internal functions definition]==========================*/
 
+#if (TEST == TP1_3)
 /* FUNCION que se ejecuta cada vez que ocurre un Tick. */
 void myTickHook( void *ptr ){
 
@@ -74,16 +85,14 @@ void myTickHook( void *ptr ){
    gpioWrite( led, ledState );
 }
 
+#elif (TEST == TP1_4)
+/* FUNCION que se ejecuta cada vez que ocurre un Tick. */
+void myTickHook( void *ptr ) {
+	LED_Time_Flag = true;
+}
+
+#endif
 /*==================[external functions definition]==========================*/
-
-#define TP1_1 (1)
-#define TP1_2 (2)
-#define TP1_3 (3)
-#define TP1_4 (4)
-#define TP1_5 (5)
-#define TP1_6 (6)
-#define TEST (TP1_3)
-
 
 /* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
 int main(void){
@@ -209,59 +218,128 @@ int main(void){
 
 #elif TEST == TP1_4
 
-#define TICKRATE_1MS	(1)				/* 1000 ticks por segundo */
-#define TICKRATE_10MS	(10)			/* 100 ticks por segundo */
-#define TICKRATE_100MS	(100)			/* 10 ticks por segundo */
-#define TICKRATE_MS		(TICKRATE_50MS)	/* defino el TICKRATE a 1MS */
+#define TICKRATE_1MS	(1)					/* 1000 ticks por segundo */
+#define TICKRATE_10MS	(10)				/* 100 ticks por segundo */
+#define TICKRATE_50MS	(50)				/* 20 ticks por segundo */
+#define TICKRATE_MS		(TICKRATE_1MS)		/* defino el TICKRATE a 1MS */
 
-#define LED_TOGGLE_100MS	(100)		/* */
+#define LED_TOGGLE_100MS	(100)		/**/
 #define LED_TOGGLE_500MS	(500)		/**/
 #define LED_TOGGLE_1000MS	(1000)		/**/
-#define LED_TOGGLE_MS		(LED_TOGGLE_500MS / TICKRATE_MS)   
+#define LED_TOGGLE_MS		(LED_TOGGLE_1000MS / TICKRATE_MS)
    
-/* ----------------- ******** ----------------- */
-/* ----------------- TICKHOOK ----------------- */
-/* ----------------- ******** ----------------- */
+///* ----------------- ******** ----------------- */
+///* ----------------- TICKHOOK ----------------- */
+///* ----------------- ******** ----------------- */
+//
+//   /* ------------- INICIALIZACIONES ------------- */
+//
+//   /* Inicializar la placa */
+//   boardConfig();
+//
+//   /* Inicializar el conteo de Ticks con resolucion de 50ms (se ejecuta
+//      periodicamente una interrupcion cada 50ms que incrementa un contador de
+//      Ticks obteniendose una base de tiempos). */
+//   tickConfig( TICKRATE_MS );
+//
+//   /* Se agrega ademas un "tick hook" nombrado myTickHook. El tick hook es
+//      simplemente una funcion que se ejecutara peri�odicamente con cada
+//      interrupcion de Tick, este nombre se refiere a una funcion "enganchada"
+//      a una interrupcion.
+//      El segundo parametro es el parametro que recibe la funcion myTickHook
+//      al ejecutarse. En este ejemplo se utiliza para pasarle el led a titilar.
+//   */
+//   tickCallbackSet( myTickHook, (void*)LEDR );
+//   delay(LED_TOGGLE_MS);
+//
+//   /* ------------- REPETIR POR SIEMPRE ------------- */
+//   while(1) {
+//      tickCallbackSet( myTickHook, (void*)LEDG );
+//      delay(LED_TOGGLE_MS);
+//      tickCallbackSet( myTickHook, (void*)LEDB );
+//      delay(LED_TOGGLE_MS);
+//      tickCallbackSet( myTickHook, (void*)LED1 );
+//      delay(LED_TOGGLE_MS);
+//      tickCallbackSet( myTickHook, (void*)LED2 );
+//      delay(LED_TOGGLE_MS);
+//      tickCallbackSet( myTickHook, (void*)LED3 );
+//      delay(LED_TOGGLE_MS);
+//      tickCallbackSet( myTickHook, (void*)LEDR );
+//      delay(LED_TOGGLE_MS);
+//   }
+//
+//   /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
+//      por ningun S.O. */
+//   return 0;
 
-   /* ------------- INICIALIZACIONES ------------- */
+   /* FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE RESET. */
 
-   /* Inicializar la placa */
-   boardConfig();
+   	/* ------------- INICIALIZACIONES ------------- */
+   	uint32_t LED_Toggle_Counter = 0;
 
-   /* Inicializar el conteo de Ticks con resolucion de 50ms (se ejecuta
-      periodicamente una interrupcion cada 50ms que incrementa un contador de
-      Ticks obteniendose una base de tiempos). */
-   tickConfig( TICKRATE_MS );
+   	/* Inicializar la placa */
+   	boardConfig();
 
-   /* Se agrega ademas un "tick hook" nombrado myTickHook. El tick hook es
-      simplemente una funcion que se ejecutara peri�odicamente con cada
-      interrupcion de Tick, este nombre se refiere a una funcion "enganchada"
-      a una interrupcion.
-      El segundo parametro es el parametro que recibe la funcion myTickHook
-      al ejecutarse. En este ejemplo se utiliza para pasarle el led a titilar.
-   */
-   tickCallbackSet( myTickHook, (void*)LEDR );
-   delay(LED_TOGGLE_MS);
+   	/* Inicializar el conteo de Ticks con resolucion de 1ms (se ejecuta
+          periodicamente una interrupcion cada TICKRATE_MS que incrementa un contador de
+          Ticks obteniendose una base de tiempos). */
+   	tickConfig( TICKRATE_MS );
 
-   /* ------------- REPETIR POR SIEMPRE ------------- */
-   while(1) {
-      tickCallbackSet( myTickHook, (void*)LEDG );
-      delay(LED_TOGGLE_MS);
-      tickCallbackSet( myTickHook, (void*)LEDB );
-      delay(LED_TOGGLE_MS);
-      tickCallbackSet( myTickHook, (void*)LED1 );
-      delay(LED_TOGGLE_MS);
-      tickCallbackSet( myTickHook, (void*)LED2 );
-      delay(LED_TOGGLE_MS);
-      tickCallbackSet( myTickHook, (void*)LED3 );
-      delay(LED_TOGGLE_MS);
-      tickCallbackSet( myTickHook, (void*)LEDR );
-      delay(LED_TOGGLE_MS);
-   }
+   	/* Se agrega ademas un "tick hook" nombrado myTickHook. El tick hook es
+          simplemente una funcion que se ejecutara peri�odicamente con cada
+          interrupcion de Tick, este nombre se refiere a una funcion "enganchada"
+          a una interrupcion.
+          El segundo parametro es el parametro que recibe la funcion myTickHook
+          al ejecutarse. En este ejemplo se utiliza para pasarle el led a titilar.
+   	*/
+   	tickCallbackSet( myTickHook, (void*)NULL );
 
-   /* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
-      por ningun S.O. */
-   return 0;
+   	gpioMap_t current_LED = LEDB;
+   	bool LED_ON = false;
+   	/* ------------- REPETIR POR SIEMPRE ------------- */
+   	while(1) {
+   		__WFI();
+
+   		if (LED_Time_Flag == true) {
+   			LED_Time_Flag = false;
+
+   			if (LED_Toggle_Counter == 0) {
+   				LED_Toggle_Counter = LED_TOGGLE_MS;
+   				gpioToggle(current_LED);
+   				if(LED_ON) {
+					switch(current_LED) {
+					case LEDB:
+						current_LED = LEDG;
+						break;
+					case LEDG:
+						current_LED = LEDR;
+						break;
+					case LEDR:
+						current_LED = LED1;
+						break;
+					case LED1:
+						current_LED = LED2;
+						break;
+					case LED2:
+						current_LED = LED3;
+						break;
+					case LED3:
+						current_LED = LEDB;
+						break;
+					}
+					LED_ON = false;
+   				}
+   				else
+   					LED_ON = true;
+   			}
+   			else
+   				LED_Toggle_Counter--;
+   		}
+   	}
+
+   	/* NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa no es llamado
+          por ningun S.O. */
+   	return 0 ;
 
 #elif TEST == TP1_5
 
