@@ -39,6 +39,8 @@ Se modifica el valor de la macro TEST por (TP1_2) para debuggear la segunda secc
 
 Primero se inicializa la placa y los registros GPIO0 como input y GPIO1 como output. Después queda en un ciclo infinito donde checkea si hay una de las 4 teclas apretadas o el GPIO0 activo, en cuyo caso enciende uno de los LED, o activa el GPIO1 si GPIO0 está activo.
 
+Algo a notar es que por cómo se usa gpioRead(TEC1), TEC1 (y todas las teclas) valen 0 cuando están apretadas, y 1 cuando no.
+
 **TP1_3**
 
 Se copia el código del archivo tickHook.c de la carpeta sapi_examples/edu-ciaa-nxp/bare_metal/tick_01_tickHook y se lo pega en la tercera sección de TP1.c, debajo de la línea
@@ -65,17 +67,11 @@ También se definen las constantes LED_TOGGLE_100MS, LED_TOGGLE_500MS y LED_TOGG
 Se definen las constantes “TICKRATE_MS” y “LED_TOGGLE_MS” y se las iguala a alguna de las constantes previamente definidas. Esto se hace de la siguiente forma:
 ```
 #define TICKRATE_MS		(TICKRATE_50MS)	
-#define LED_TOGGLE_MS	(LED_TOGGLE_500MS / TICKRATE_MS)  
+#define LED_TOGGLE_MS	(LED_TOGGLE_500MS / TICKRATE_MS)
 ```
 De ser necesario cambiar los tiempos de parpadeo de los leds, se debe cambiar una sola vez sobre los defines mostrados arriba. Tambien permite agregar nuevos tiempos modificando solo dos lineas de codigo. 
 
-Para poder hacer más portable la versión, se buscó prescindir de la función delay(). La función myTickHook ahora
-
-Luego se copió el código del punto anterior y se modifican las llamadas a las funciones “tickConfig(50)” y “delay(1000);”, por las definiciones mencionadas arriba. A continuación, se muestra el ejemplo del código. 
-```
-tickConfig( TICKRATE_MS );
-```
-Con estos cambios el código de TP1_3 más portable. Y 
+Para poder hacer más portable la versión, se buscó prescindir de la función delay(). La función myTickHook ahora setea el flag LED_Time_Flag, que hace que se descuente un contador. Cuando este llega a 0, en el tiempo LED_TOGGLE_MS, un LED se prende y se activa un flag que avisa que está encendido. Esto se encuentra dentro de un ciclo infinito que comienza con la función __WFI() que espera a que haya alguna interrupción para avanzar con la siguiente línea. Una vez que el contador llega nuevamente a 0, el led se apaga usando la función gpioToggle y se cambia de LED a togglear. El resultado final es una secuencia infinita en el que cada led se prende y se apaga de a uno.
 
 **TP1_5**
 
@@ -101,13 +97,14 @@ typedef enum{
 
 Por otro lado, ‘debugPrintString’  es la encargada de escribir el string por la UART y está definida sobre sapi_print.c. Para esto se usa la función “uartWriteString( printer, string )” que escribe caracter por caracter sobre la UART.
 La función “uartWriteByte” lee el flag de TxReady y si lo encuentra vacío, carga el byte a enviar sobre la dirección de la UART (pUART->THR), en caso contrario espera.
+Se agregó un array de strings para imprimir qué LED se está toggleando en cada caso.
 
 ![](leds.png)
 
 **TP1_6**
 
-Para la lectura de un botón, se utiliza la función “gpioRead( tecla )”. Esta función busca el estado en el que se encuentra el pin y lo devuelve en una variable bool_t.
-En esta función se definen las variables  siguiente y se llama a la función “gpioObtainPinConfig( … )”. Esta última busca y devuelve las características o valores de configuración del pin ( valores de las variables definidas abajo  ).
+Para la lectura de un botón, se utiliza la función “gpioRead( tecla )” como en TP1_2. Esta función busca el estado en el que se encuentra el pin y lo devuelve en una variable bool_t.
+En esta función se definen las variables siguientes y se llama a la función “gpioObtainPinConfig( … )”. Esta última busca y devuelve las características o valores de configuración del pin (valores de las variables definidas abajo).
 
 ```
 // define las variables en “gpioRead”
@@ -123,3 +120,6 @@ En esta función se definen las variables  siguiente y se llama a la función �
 ```
 
 Por último, se llama a “Chip_GPIO_ReadPortBit” que lee el estado del GPIO y devuelve un bool.
+
+Esta vez myTickHook setea unos flags análogos a los definidos en TP1_4 y TP1_5, pero que solo se activan si alguna de las 4 teclas está apretada. El ciclo es igual al definido anteriormente, pero ahora en vez de llevar un contador según el tiempo que pasaba, se tiene un contador que guarda el tiempo en que estuvo apretada alguna tecla. Cuando en total se haya apretado la tecla por más de BUTTON_STATUS_MS milisegundos (macro análoga a LED_TOGGLE_MS), se ejecuta la siguiente acción siguiendo los mismos pasos que en el TP1_5: se togglea el LED, se manda la cadena por UART, y se selecciona otro LED si ya se apagó y prendió una vez.
+Además está el flag toggled que registra si un LED fue toggleado y no permite volver a togglear hasta que se suelte la tecla apretada.
